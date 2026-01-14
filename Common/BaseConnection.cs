@@ -16,7 +16,7 @@
         public virtual QiVector<double> GetGradient(Tuple<int, QiVector<double>> requester, Tuple<int, QiVector<double>> otherNode)
         {
             var sum = requester.Item2 + otherNode.Item2;
-            return requester.Item2 / sum - otherNode.Item2 / sum;
+            return (requester.Item2 - otherNode.Item2) / requester.Item2;
         }
 
         #region IEquatable

@@ -45,11 +45,15 @@ namespace QiNetwork.Common
                 {
                     gradient[type] = Math.Clamp(gradient[type], -1d, 1d);
                 }
-
+                if (this.Id == 1)
+                {
+                    gradient = gradient / 10;
+                }
                 gradients[otherNode] = gradient;
             }
 
             var totalGradients = gradients.Values.Aggregate((a, b) => a + b);
+            if (gradients.Count == 1) { totalGradients = totalGradients / totalGradients; }
             var remainder = localConcentration;
             foreach (var gradient in gradients)
             {
@@ -63,6 +67,14 @@ namespace QiNetwork.Common
         public virtual void FinishCycle()
         {
             CurrentQi = _nextCycleQi * 0.9d;
+            foreach (var type in QiTypeCollections.ElementalTypes)
+            {
+                CurrentQi[type] = Math.Clamp(CurrentQi[type], 0d, double.MaxValue);
+            }
+            foreach (var type in QiTypeCollections.OtherTypes)
+            {
+                CurrentQi[type] = Math.Clamp(CurrentQi[type], -1d, 1d);
+            }
             _nextCycleQi = new();
         }
 

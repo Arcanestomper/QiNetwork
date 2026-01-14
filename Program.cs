@@ -19,6 +19,7 @@ internal class Program
                 new Basic_Node(){ Id = 3 },
                 new Basic_Node(){ Id = 4 },
                 new Basic_Node(){ Id = 5 },
+                new Technique_Node(){ Id = 6 },
             ],
             Connections =
             [
@@ -26,6 +27,7 @@ internal class Program
                 new Basic_Connection(){ NodeIdStart = 2, NodeIdEnd = 3 },
                 new Basic_Connection(){ NodeIdStart = 3, NodeIdEnd = 4 },
                 new Basic_Connection(){ NodeIdStart = 4, NodeIdEnd = 5 },
+                new Basic_Connection(){ NodeIdStart = 5, NodeIdEnd = 6 },
             ]
         };
 
