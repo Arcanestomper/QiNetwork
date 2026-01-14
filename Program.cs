@@ -1,5 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using QiNetwork;
+using QiNetwork.Common;
+using QiNetwork.Connection;
+using QiNetwork.Node;
 using System.Drawing;
 using System.Numerics;
 
@@ -7,7 +10,31 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        var network = new Network()
+        {
+            Nodes =
+            [
+                new Dantian_Node(){ Id = 1, },
+                new Basic_Node(){ Id = 2 },
+                new Basic_Node(){ Id = 3 },
+                new Basic_Node(){ Id = 4 },
+                new Basic_Node(){ Id = 5 },
+            ],
+            Connections =
+            [
+                new Basic_Connection(){ NodeIdStart = 1, NodeIdEnd = 2 },
+                new Basic_Connection(){ NodeIdStart = 2, NodeIdEnd = 3 },
+                new Basic_Connection(){ NodeIdStart = 3, NodeIdEnd = 4 },
+                new Basic_Connection(){ NodeIdStart = 4, NodeIdEnd = 5 },
+            ]
+        };
+
+        for(int i = 0; i < 1000; i++)
+        {
+            network.SimulateCycle();
+        }
+
+        /*Console.WriteLine("Hello, World!");
         Point current_location = new Point();
         current_location.X = 0;
         current_location.Y = 0;
@@ -30,6 +57,6 @@ internal class Program
                ChosenOne.Nodes[1].Position.Y - ChosenOne.Nodes[0].Position.Y);
         Console.WriteLine(v1);
 
-        Console.WriteLine(ChosenOne.Nodes[0]);
+        Console.WriteLine(ChosenOne.Nodes[0]);*/
     }
 }

@@ -1,49 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Text;
+﻿using QiNetwork.Common;
+using System;
+using System.Linq;
 
 namespace QiNetwork
 {
-    public class Qi_Network
+    public class Network
     {
-        public Node?[] Nodes { get; set; } = new Node[10];
+        public List<BaseNode> Nodes { get; set; } = [];
 
-        public List<Connection?> Connections { get; set; } = new List<Connection?>();
+        public List<BaseConnection> Connections { get; set; } = [];
 
-
-    }
-
-    public class Node (int Id, string Name, Point coordinates)
-    {
-        [Required]
-        public int _Id { get; set; } = Id;
-
-        public string? _Name { get; set; } = Name;
-        public Point Position { get; set; } = coordinates;
-
-        public Qi Generated_Qi { get; set; } = new Qi();
-
-        public Qi Current_Qi { get; set; } = new Qi();
-
-        public class Qi
+        public void SimulateCycle()
         {
-            public Dictionary<string, double> Qi_Type { get; set; } = new Dictionary<string, double>();
+            foreach (var node in Nodes)
+            {
+                var relatedConnections = Connections.Where(f => f.NodeIdStart == node.Id || f.NodeIdEnd == node.Id).ToArray();
+                var relatedNodes = Nodes.Where(f => f.Id != node.Id && relatedConnections.Any(g => g.NodeIdStart == f.Id || g.NodeIdEnd == f.Id)).ToArray();
+
+                node.CalculateFlows(relatedConnections, relatedNodes);
+            }
+
+            foreach (var node in Nodes)
+            {
+                node.FinishCycle();
+            }
         }
-
     }
-
-    public class Connection (int Start, int End)
-    {
-        public int Node_Id_Start { get; set; } = Start;
-        public int Node_Id_End { get; set; } = End;
-    }
-
-    public class Qi_Vector(int X, int Y)
-    {
-        public int _X { get; set; } = X;
-        public int _Y { get; set; } = Y;
-    }
-
 }
