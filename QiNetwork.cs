@@ -1,6 +1,9 @@
 ﻿using QiNetwork.Common;
+using QiNetwork.Connection;
+using QiNetwork.Node;
 using System;
 using System.Linq;
+using System.Net;
 
 namespace QiNetwork
 {
@@ -24,6 +27,32 @@ namespace QiNetwork
             {
                 node.FinishCycle();
             }
+        }
+        public void InitializeNetwork()
+        {
+            Nodes.Add(new Dantian_Node() { Id = 1 });
+        }
+
+        public void AddNode(string type, int start_id)
+        {
+            var new_id = Nodes.Count + 1 ;
+            switch (type) 
+            {
+                case "Dantian":
+                    Nodes.Add(new Dantian_Node() { Id = new_id });
+                    break;
+                case "Basic":
+                    Nodes.Add(new Basic_Node() { Id = new_id });
+                    break;
+                case "Technique":
+                    Nodes.Add(new Technique_Node() { Id = new_id });
+                    break;
+                default:
+                    Nodes.Add(new Basic_Node() { Id = new_id });
+                    break;
+            }
+            
+            Connections.Add(new Basic_Connection() { NodeIdStart = start_id, NodeIdEnd = new_id });
         }
     }
 }

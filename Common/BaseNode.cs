@@ -45,10 +45,6 @@ namespace QiNetwork.Common
                 {
                     gradient[type] = Math.Clamp(gradient[type], -1d, 1d);
                 }
-                if (this.Id == 1)
-                {
-                    gradient = gradient / 10;
-                }
                 gradients[otherNode] = gradient;
             }
 
@@ -58,6 +54,10 @@ namespace QiNetwork.Common
             foreach (var gradient in gradients)
             {
                 var finalFlow = localConcentration * gradient.Value / totalGradients;
+                if (this.GetType().Name == "Dantian_Node")
+                {
+                    finalFlow = finalFlow / 5;
+                }
                 remainder -= finalFlow;
                 gradient.Key._addtoNextCycleQi(finalFlow);
             }

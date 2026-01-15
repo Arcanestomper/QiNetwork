@@ -3,6 +3,7 @@ using QiNetwork;
 using QiNetwork.Common;
 using QiNetwork.Connection;
 using QiNetwork.Node;
+using System.Data;
 using System.Drawing;
 using System.Numerics;
 
@@ -10,7 +11,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var network = new Network()
+        var network = new Network();
+        /*
         {
             Nodes =
             [
@@ -30,11 +32,23 @@ internal class Program
                 new Basic_Connection(){ NodeIdStart = 5, NodeIdEnd = 6 },
             ]
         };
+        */
+        network.InitializeNetwork();
+        network.AddNode("Basic", 1);
+        network.AddNode("Basic", 2);
+        network.AddNode("Basic", 3);
+        network.AddNode("Basic", 4);
+        network.AddNode("Technique", 5);
 
-        for(int i = 0; i < 1000; i++)
+        network.AddNode("Basic", 1);
+        network.AddNode("Dantian", 7);
+
+        for (int i = 0; i < 1000; i++)
         {
             network.SimulateCycle();
         }
+
+        Console.WriteLine("End Simulation");
 
         /*Console.WriteLine("Hello, World!");
         Point current_location = new Point();
