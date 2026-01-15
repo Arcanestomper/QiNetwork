@@ -4,7 +4,10 @@ namespace QiNetwork.Node
 {
     public class Dantian_Node : BaseNode
     {
-        protected override QiVector<double> _getQiForFlowCalculation() =>
-            base._getQiForFlowCalculation() + new QiVector<double>(defaultValueElemental: 10, defaultValueOther: 0);
+        public override QiVector<double> CurrentQi
+        {
+            get => new QiVector<double>(10d, 0d);
+            set { }
+        }
     }
 }

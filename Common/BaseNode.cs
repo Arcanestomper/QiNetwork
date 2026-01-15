@@ -6,10 +6,11 @@ namespace QiNetwork.Common
     {
         public int Id { get; set; } = -1;
         public Vector2 Position { get; set; } = new();
-        public QiVector<double> CurrentQi { get; set; } = new();
+        protected QiVector<double> _previousCycleQi { get; set; } = new();
+        public virtual QiVector<double> CurrentQi { get; set; } = new();
         protected QiVector<double> _nextCycleQi { get; set; } = new();
 
-        protected virtual QiVector<double> _getQiForFlowCalculation() => CurrentQi;
+        protected virtual QiVector<double> _getLocalPressure() => CurrentQi;
         protected virtual QiVector<double> _addtoNextCycleQi(QiVector<double> toAdd) => _nextCycleQi += toAdd;
 
         /// <summary>
@@ -17,8 +18,8 @@ namespace QiNetwork.Common
         /// </summary>
         public virtual void CalculateFlows(IEnumerable<BaseConnection> connections, IEnumerable<BaseNode> nodes)
         {
-            Dictionary<BaseNode, QiVector<double>> gradients = [];
-            var localConcentration = _getQiForFlowCalculation();
+            Dictionary<BaseNode, QiVector<double>> desiredFlows = [];
+            var localPressure = _getLocalPressure();
 
             foreach (var connection in connections)
             {
@@ -32,41 +33,41 @@ namespace QiNetwork.Common
                     throw new ArgumentException("Connection was passed without target node. Could not calculate flows.");
                 }
 
-                var gradient = connection.GetGradient(
-                    new Tuple<int, QiVector<double>>(this.Id, localConcentration),
-                    new Tuple<int, QiVector<double>>(otherNode.Id, otherNode._getQiForFlowCalculation()));
+                var effectivePressure = connection.GetEffectivePressure(
+                    new Tuple<int, QiVector<double>>(this.Id, localPressure),
+                    new Tuple<int, QiVector<double>>(otherNode.Id, otherNode._getLocalPressure()));
 
-                // negative values will be nulled for now, though in the future, they should push qi in the opposite direction
-                foreach (var type in QiTypeCollections.ElementalTypes)
-                {
-                    gradient[type] = Math.Clamp(gradient[type], 0d, double.MaxValue);
-                }
-                foreach (var type in QiTypeCollections.OtherTypes)
-                {
-                    gradient[type] = Math.Clamp(gradient[type], -1d, 1d);
-                }
-                gradients[otherNode] = gradient;
+                var desiredFlow = 0.5d * localPressure * (localPressure - effectivePressure ) / (localPressure + effectivePressure);
+
+                desiredFlows[otherNode] = desiredFlow.ClampElemental(0, double.MaxValue).ClampOther(-1, 1);
             }
 
-            var totalGradients = gradients.Values.Aggregate((a, b) => a + b);
-            if (gradients.Count == 1) { totalGradients = totalGradients / totalGradients; }
-            var remainder = localConcentration;
-            foreach (var gradient in gradients)
+            var totalFlow = desiredFlows.Values.Aggregate((a, b) => a + b);
+            foreach(var type in QiTypeCollections.ElementalTypes)
             {
-                var finalFlow = localConcentration * gradient.Value / totalGradients;
-                if (this.GetType().Name == "Dantian_Node")
+                if (totalFlow[type] > CurrentQi[type] * 0.5d)
                 {
-                    finalFlow = finalFlow / 5;
+                    foreach(var kvp in desiredFlows)
+                    {
+                        kvp.Value[type] = 0.5d * CurrentQi[type] * kvp.Value[type] / totalFlow[type];
+                    }
                 }
+            }
+
+            var remainder = CurrentQi;
+            foreach(var kvp in desiredFlows)
+            {
+                var finalFlow = kvp.Value;
                 remainder -= finalFlow;
-                gradient.Key._addtoNextCycleQi(finalFlow);
+                kvp.Key._addtoNextCycleQi(finalFlow);
             }
             this._addtoNextCycleQi(remainder);
         }
 
         public virtual void FinishCycle()
         {
-            CurrentQi = _nextCycleQi * 0.9d;
+            _previousCycleQi = CurrentQi;
+            CurrentQi = (_nextCycleQi * 0.9d).Round(Globals.QI_SIGNIFICANT_DIGITS);
             foreach (var type in QiTypeCollections.ElementalTypes)
             {
                 CurrentQi[type] = Math.Clamp(CurrentQi[type], 0d, double.MaxValue);

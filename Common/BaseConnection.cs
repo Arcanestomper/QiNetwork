@@ -13,10 +13,9 @@
             NodeIdStart = node_Id_End;
         }
 
-        public virtual QiVector<double> GetGradient(Tuple<int, QiVector<double>> requester, Tuple<int, QiVector<double>> otherNode)
+        public virtual QiVector<double> GetEffectivePressure(Tuple<int, QiVector<double>> requester, Tuple<int, QiVector<double>> otherNode)
         {
-            var sum = requester.Item2 + otherNode.Item2;
-            return (requester.Item2 - otherNode.Item2) / requester.Item2;
+            return otherNode.Item2;
         }
 
         #region IEquatable

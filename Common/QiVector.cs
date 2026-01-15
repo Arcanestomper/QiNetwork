@@ -219,4 +219,45 @@ namespace QiNetwork.Common
         public override string ToString() =>
             $"{{ {string.Join(", ", this.Select(f => $"{f.Item1}: {f.Item2}"))} }}";
     }
+
+    public static class QiVectorExtensions
+    {
+        public static QiVector<double> Round(this QiVector<double> input, int significantDigits)
+        {
+            var newQi = new QiVector<double>();
+            foreach (var type in QiTypeCollections.AllTypes)
+            {
+                newQi[type] = Math.Round(input[type], significantDigits);
+            }
+            return newQi;
+        }
+
+        public static QiVector<double> ClampElemental(this QiVector<double> input, double min, double max)
+        {
+            var newQi = new QiVector<double>();
+            foreach (var type in QiTypeCollections.ElementalTypes)
+            {
+                newQi[type] = Math.Clamp(input[type], min, max);
+            }
+            foreach (var type in QiTypeCollections.OtherTypes)
+            {
+                newQi[type] = input[type];
+            }
+            return newQi;
+        }
+
+        public static QiVector<double> ClampOther(this QiVector<double> input, double min, double max)
+        {
+            var newQi = new QiVector<double>();
+            foreach (var type in QiTypeCollections.ElementalTypes)
+            {
+                newQi[type] = input[type];
+            }
+            foreach (var type in QiTypeCollections.OtherTypes)
+            {
+                newQi[type] = Math.Clamp(input[type], min, max);
+            }
+            return newQi;
+        }
+    }
 }
