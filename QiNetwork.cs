@@ -4,6 +4,7 @@ using QiNetwork.Node;
 using System;
 using System.Linq;
 using System.Net;
+using System.Xml.Linq;
 
 namespace QiNetwork
 {
@@ -33,25 +34,10 @@ namespace QiNetwork
             Nodes.Add(new Dantian_Node() { Id = 1 });
         }
 
-        public void AddNode(string type, int start_id)
+        public void AddNode<T>(int start_id) where T : BaseNode, new()
         {
-            var new_id = Nodes.Count + 1 ;
-            switch (type) 
-            {
-                case "Dantian":
-                    Nodes.Add(new Dantian_Node() { Id = new_id });
-                    break;
-                case "Basic":
-                    Nodes.Add(new Basic_Node() { Id = new_id });
-                    break;
-                case "Technique":
-                    Nodes.Add(new Technique_Node() { Id = new_id });
-                    break;
-                default:
-                    Nodes.Add(new Basic_Node() { Id = new_id });
-                    break;
-            }
-            
+            var new_id = Nodes.Select(f => f.Id).Max() + 1;
+            Nodes.Add(new T() { Id = new_id });
             Connections.Add(new Basic_Connection() { NodeIdStart = start_id, NodeIdEnd = new_id });
         }
     }

@@ -34,14 +34,19 @@ internal class Program
         };
         */
         network.InitializeNetwork();
-        network.AddNode("Basic", 1);
-        network.AddNode("Basic", 2);
-        network.AddNode("Basic", 3);
-        network.AddNode("Basic", 4);
-        network.AddNode("Technique", 5);
+        network.AddNode<Basic_Node>(1);
+        network.AddNode<Basic_Node>(2);
+        network.AddNode<Basic_Node>(3);
+        network.AddNode<Basic_Node>(4);
+        network.AddNode<Technique_Node>(5);
 
-        network.AddNode("Basic", 1);
-        network.AddNode("Dantian", 7);
+        /*
+        for (int i = 0; i < 10; i++)
+        {
+            network.AddNode<Basic_Node>(i + 6);
+        }
+        */
+
 
         for (int i = 0; i < 1000; i++)
         {
