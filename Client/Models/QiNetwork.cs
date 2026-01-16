@@ -39,6 +39,7 @@ namespace QiNetwork
             var new_id = Nodes.Select(f => f.Id).Max() + 1;
             Nodes.Add(new T() { Id = new_id });
             Connections.Add(new Basic_Connection() { NodeIdStart = start_id, NodeIdEnd = new_id });
+            
         }
     }
 }

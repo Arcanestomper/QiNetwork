@@ -1,0 +1,64 @@
+﻿@page "/Network"
+@using QiNetwork;
+@using QiNetwork.Common;
+@using QiNetwork.Connection;
+@using QiNetwork.Node;
+@using System.Data;
+@using System.Drawing;
+@using System.Numerics;
+
+<h3>NetworkVisualize</h3>
+
+<svg width="100" height="100">
+    <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+</svg>
+
+@code {
+    protected override void OnInitialized()
+    {
+        var network = new Network();
+        /*
+        {
+            Nodes =
+            [
+                new Dantian_Node(){ Id = 1, },
+                new Basic_Node(){ Id = 2 },
+                new Basic_Node(){ Id = 3 },
+                new Basic_Node(){ Id = 4 },
+                new Basic_Node(){ Id = 5 },
+                new Technique_Node(){ Id = 6 },
+            ],
+            Connections =
+            [
+                new Basic_Connection(){ NodeIdStart = 1, NodeIdEnd = 2 },
+                new Basic_Connection(){ NodeIdStart = 2, NodeIdEnd = 3 },
+                new Basic_Connection(){ NodeIdStart = 3, NodeIdEnd = 4 },
+                new Basic_Connection(){ NodeIdStart = 4, NodeIdEnd = 5 },
+                new Basic_Connection(){ NodeIdStart = 5, NodeIdEnd = 6 },
+            ]
+        };
+        */
+        network.InitializeNetwork();
+        network.AddNode<Basic_Node>(1);
+        network.AddNode<Basic_Node>(2);
+        network.AddNode<Basic_Node>(3);
+        network.AddNode<Basic_Node>(4);
+        network.AddNode<Technique_Node>(5);
+
+        /*
+        for (int i = 0; i < 10; i++)
+        {
+            network.AddNode<Basic_Node>(i + 6);
+        }
+        */
+
+
+        for (int i = 0; i < 1000; i++)
+        {
+            network.SimulateCycle();
+        }
+
+        Console.WriteLine("End Simulation");
+
+    }
+}
