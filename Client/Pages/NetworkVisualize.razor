@@ -9,19 +9,117 @@
 
 <h3>NetworkVisualize</h3>
 
-<svg width="100" height="100">
-    <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+<svg width="1000" height="1000">
+
+    <g id="connections">
+        @foreach (var connection in network.Connections)
+        {
+            <line x1="@network.Nodes[connection.NodeIdStart - 1].Position.X" y1="@network.Nodes[connection.NodeIdStart - 1].Position.Y"
+                  x2="@network.Nodes[connection.NodeIdEnd - 1].Position.X" y2="@network.Nodes[connection.NodeIdEnd - 1].Position.Y"
+                  style="stroke-width: 8px; stroke: darkblue;" />
+            <line x1="@network.Nodes[connection.NodeIdStart - 1].Position.X" y1="@network.Nodes[connection.NodeIdStart - 1].Position.Y"
+                  x2="@network.Nodes[connection.NodeIdEnd - 1].Position.X" y2="@network.Nodes[connection.NodeIdEnd - 1].Position.Y"
+                  style="stroke-width: 6px; stroke: deepskyblue;" />
+        }
+    </g>
+
+    <g id="nodes" >
+        @foreach (var node in network.Nodes)
+        {
+            <circle cx="@node.Position.X" cy="@node.Position.Y" r="40" stroke="blue" stroke-width="4" fill="white" />
+            <line x1="@node.Position.X" y1="@node.Position.Y"
+                  x2="@(node.Position.X + 40 * Math.Cos(0 * Math.PI + Math.PI*3/2))" y2="@(node.Position.Y + 40 * Math.Sin(0 * Math.PI + Math.PI*3/2))"
+                  style="stroke-width: 8px; stroke: darkblue;" />
+            <line x1="@node.Position.X" y1="@node.Position.Y"
+                  x2="@(node.Position.X + 40 * Math.Cos(0.4 * Math.PI + Math.PI*3/2))" y2="@(node.Position.Y + 40 * Math.Sin(0.4 * Math.PI + Math.PI*3/2))"
+                  style="stroke-width: 8px; stroke: darkblue;" />
+                  
+            <line x1="@node.Position.X" y1="@node.Position.Y"
+                  x2="@(node.Position.X + 40 * Math.Cos(0.8 * Math.PI + Math.PI*3/2))" y2="@(node.Position.Y + 40 * Math.Sin(0.8 * Math.PI + Math.PI*3/2))"
+                  style="stroke-width: 8px; stroke: darkblue;" />
+            <line x1="@node.Position.X" y1="@node.Position.Y"
+                  x2="@(node.Position.X + 40 * Math.Cos(1.2 * Math.PI + Math.PI*3/2))" y2="@(node.Position.Y + 40 * Math.Sin(1.2 * Math.PI + Math.PI*3/2))"
+                  style="stroke-width: 8px; stroke: darkblue;" />
+            <line x1="@node.Position.X" y1="@node.Position.Y"
+                  x2="@(node.Position.X + 40 * Math.Cos(1.6 * Math.PI + Math.PI*3/2))" y2="@(node.Position.Y + 40 * Math.Sin(1.6 * Math.PI + Math.PI*3/2))"
+                  style="stroke-width: 8px; stroke: darkblue;" />
+            <path
+                d="M @node.Position.X @node.Position.Y
+                   L @(node.Position.X + 40 * Math.Cos(0 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(0 * Math.PI + Math.PI*3/2))
+                   A 40 40, 0, 0, 1, @(node.Position.X + 40 * Math.Cos(0.4 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(0.4 * Math.PI + Math.PI*3/2))
+                   Z
+                   "
+                fill="green"
+                stroke="black"
+                stroke-width="2" />
+            <path
+                d="M @node.Position.X @node.Position.Y
+                   L @(node.Position.X + 40 * Math.Cos(0.4 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(0.4 * Math.PI + Math.PI*3/2))
+                   A 40 40, 0, 0, 1, @(node.Position.X + 40 * Math.Cos(0.8 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(0.8 * Math.PI + Math.PI*3/2))
+                   Z
+                   "
+                fill="red"
+                stroke="black"
+                stroke-width="2" />
+            <path
+                d="M @node.Position.X @node.Position.Y
+                   L @(node.Position.X + 40 * Math.Cos(0.8 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(0.8 * Math.PI + Math.PI*3/2))
+                   A 40 40, 0, 0, 1, @(node.Position.X + 40 * Math.Cos(1.2 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(1.2 * Math.PI + Math.PI*3/2))
+                   Z
+                   "
+                fill="blue"
+                stroke="black"
+                stroke-width="2" />
+            <path
+                d="M @node.Position.X @node.Position.Y
+                   L @(node.Position.X + 40 * Math.Cos(1.2 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(1.2 * Math.PI + Math.PI*3/2))
+                   A 40 40, 0, 0, 1, @(node.Position.X + 40 * Math.Cos(1.6 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(1.6 * Math.PI + Math.PI*3/2))
+                   Z
+                   "
+                fill="brown"
+                stroke="black"
+                stroke-width="2" />
+            <path
+                d="M @node.Position.X @node.Position.Y
+                   L @(node.Position.X + 40 * Math.Cos(1.6 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(1.6 * Math.PI + Math.PI*3/2))
+                   A 40 40, 0, 0, 1, @(node.Position.X + 40 * Math.Cos(0 * Math.PI + Math.PI*3/2)) @(node.Position.Y + 40 * Math.Sin(0 * Math.PI + Math.PI*3/2))
+                   Z
+                   "
+                fill="yellow"
+                stroke="black"
+                stroke-width="2" />
+
+        }
+    </g>
+
+   
+
 </svg>
 
 @code {
+    private double _topLeft_X = 0;
+    private double _topLeft_Y = 0;
+    private double _width = 1000;
+    private double _height = 1000;
+
+    private const double GRID_SIZE = 100;
+
+    private Network network = new Network();
+    //private Test_Nodes = new Nodes();
+
+
+
+
+
+
     protected override void OnInitialized()
-    {
-        var network = new Network();
+    {        
+        //var network = new Network();
         /*
         {
             Nodes =
             [
-                new Dantian_Node(){ Id = 1, },
+            new Dantian_Node(){ Id = 1, },
                 new Basic_Node(){ Id = 2 },
                 new Basic_Node(){ Id = 3 },
                 new Basic_Node(){ Id = 4 },
@@ -38,27 +136,52 @@
             ]
         };
         */
-        network.InitializeNetwork();
+
+                network.InitializeNetwork();
         network.AddNode<Basic_Node>(1);
         network.AddNode<Basic_Node>(2);
         network.AddNode<Basic_Node>(3);
         network.AddNode<Basic_Node>(4);
         network.AddNode<Technique_Node>(5);
 
+        network.Nodes[0].Position = new Vector2(50, 150) ;
+        network.Nodes[1].Position = new Vector2(150, 250);
+        network.Nodes[2].Position = new Vector2(250, 350);
+        network.Nodes[3].Position = new Vector2(350, 150);
+        network.Nodes[4].Position = new Vector2(450, 150);
+        network.Nodes[5].Position = new Vector2(550, 150);
+
         /*
         for (int i = 0; i < 10; i++)
         {
             network.AddNode<Basic_Node>(i + 6);
-        }
+            }
         */
 
 
-        for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 1000; i++)
         {
             network.SimulateCycle();
         }
 
         Console.WriteLine("End Simulation");
 
+
+
     }
+
+    List<Test_Node> Nodes = new List<Test_Node>
+    {
+        new Test_Node {X = 50, Y = 50},
+        new Test_Node {X = 150, Y = 50},
+        new Test_Node {X = 250, Y = 50}
+    };
+
+    public class Test_Node
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
+
 }
